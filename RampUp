@@ -1,0 +1,5 @@
+
+
+# Assuming motor has been enabled and initialized beforehand
+
+def rampUp():
