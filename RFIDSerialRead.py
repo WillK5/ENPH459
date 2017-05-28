@@ -16,27 +16,22 @@ while True:
             data = serial.read()
             char = data.decode("utf-8")
 
-        print(code)
-        secureList += [code]
-        code = ''
-        print(secureList)
 
-#    data = serial.read()
- #   print(data)
-  #  char = data.decode("utf-8")
-#
-    #print(char)
+    if code in secureList:
+        # open the door immediately, stand back image written
+        print("opening")
+        #doorOpen()
 
- #   if char == '\r':
-  #      print('String ending')
-   #     print(code)
+    else: 
+        # Send to payment image, wait for user to imput the image
+        print("not registered")
+        # if paymentFunc():
+        #     doorOpen()
+        # else:
+        #     #Write error message, return to main screen
 
-        # Storing code for later use
-    #    secureList += [code]  
-     #   code = ''
-      #  print(secureList)
-        
-#    elif char == '\x02':
- #       print('String starting')
-  #  else:
-   #     code = code + char
+
+    print(code)
+    secureList += [code]
+    code = ''
+    print(secureList)
