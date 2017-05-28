@@ -8,6 +8,7 @@ code = ''
 while True:
 
     if serial.read() == b'\x02':
+        code = ''
         data = serial.read()
         char = data.decode("utf-8")
 
@@ -15,23 +16,23 @@ while True:
             code += char
             data = serial.read()
             char = data.decode("utf-8")
+            
+        print(code)
+        print(secureList)
 
-
-    if code in secureList:
-        # open the door immediately, stand back image written
+    if code in secureList:        # open the door immediately, stand back image written
         print("opening")
         #doorOpen()
 
     else: 
         # Send to payment image, wait for user to imput the image
         print("not registered")
+        print("Payment")
+        secureList += [code]
         # if paymentFunc():
         #     doorOpen()
         # else:
         #     #Write error message, return to main screen
 
 
-    print(code)
-    secureList += [code]
-    code = ''
-    print(secureList)
+    
