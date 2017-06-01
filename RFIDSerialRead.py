@@ -22,6 +22,15 @@ if RFIDAuthenticate():
 else: 
     #calling starting scene 
 
+################# RFID Authenticate #################
+
+## Purpose:  Authenticate the key provided by an RFID serial tag.  
+
+## Method:  Waits to RFID tag to be read, interprets the resulting bytes or information into a string
+##          and checks a secure list (global variable) for the same tag, if the tag exists the function
+##          returns True, if its not in the list the function calls the payment function, if payment is 
+##          provided the function returns True, otherwise the function returns false
+
 def RFIDAuthenticate():
     code = ''
     timeout = 10000 #Time it takes for RFID read to timeout
@@ -87,16 +96,20 @@ def operate(doorState):
 
     timer = time.time()
 
+    speedHi = 300 #mm/s
+    speedLo = 10 #mm/s
+
+    highPulse = 0.0000001 #Seconds
+
+    speedHi = (1.0/(speedHi * (360.0/105.0) * (1.0/1.8))) - highPulse
+    speedLo = (1.0/(speedLo * (360.0/105.0) * (1.0/1.8))) - highPulse
+
+    # Considering states and setting directions for states
     openLast = 1
     closedLast = 0
 
     closingDir = 1
     openingDir = 0
-
-    endPulses = 3000 # Time until the deceleration phase begins
-
-    speedHi = 0.00001
-    speedLo = 0.001
 
     rampUpTime = 20 # Duration of ramp function in seconds
 
