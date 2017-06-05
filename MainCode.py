@@ -48,8 +48,8 @@ global pulseLength, speedHi, speedLo
 
 # Motor Characteristics
 pulseLength = 0.0000001
-speedLo = 0.3   #Low speed limit
-speedHi = 0.01  #High speed limit
+speedLo = 0.01   #Low speed limit
+speedHi = 0.001  #High speed limit
 
 
 def main():
@@ -100,7 +100,7 @@ def linMov(distance, linRate):
 
 def rampUpTime(duration):
     
-    accel = 0.001
+    accel = 3
     timeVar = speedLo
 
     t0 = time.time()
@@ -119,14 +119,14 @@ def rampUpTime(duration):
         GPIO.output(step,0)
         time.sleep(abs(timeVar))
 
-        timeVar = timeVar - accel
+        timeVar = timeVar/accel
 
     print("limit switch hit")
     return
 
 def rampUpDist(distance):
 
-    accel = 0.00001
+    accel = 1.01
     timeVar = speedLo
 
     GPIO.output(enable, GPIO.HIGH) #Enable the motor controller
@@ -147,8 +147,7 @@ def rampUpDist(distance):
         GPIO.output(step,0)
         time.sleep(abs(timeVar))
 
-        timeVar = timeVar - accel
-        print(timeVar)
+        timeVar = timeVar/accel
 
         x = x + 1
 
