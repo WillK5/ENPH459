@@ -48,7 +48,7 @@ global pulseLength, speedHi, speedLo
 
 # Motor Characteristics
 pulseLength = 0.0000001
-speedLo = 0.1   #Low speed limit
+speedLo = 0.3   #Low speed limit
 speedHi = 0.01  #High speed limit
 
 
@@ -68,7 +68,7 @@ def main():
 #        if input_state == True:
 #            linMov(distance, linRate)
         
-    rampUpDist(10)
+    rampUpDist(100)
 
             
 def linMov(distance, linRate):
@@ -99,13 +99,13 @@ def linMov(distance, linRate):
     print(stepNumber)
 
 def rampUpTime(duration):
-
-    accel = 0.00001
+    
+    accel = 0.001
     timeVar = speedLo
 
     t0 = time.time()
 
-    while(!GPIO.input(openSwtch)):
+    while(not(GPIO.input(openSwtch))):
 
         #Checking safety switches
 
@@ -135,18 +135,20 @@ def rampUpDist(distance):
 
     x = 0
     pulses = int(distance * (360/105) * (1/1.8))
+    print(pulses)
 
-    while(!GPIO.input(openSwtch)):
+    while(not(GPIO.input(openSwtch))):
 
         if(pulses < x):
             return
 
-        GPIO.output(step,HIGH)
-        time.sleeo(pulseLength)
+        GPIO.output(step,1)
+        time.sleep(pulseLength)
         GPIO.output(step,0)
         time.sleep(abs(timeVar))
 
         timeVar = timeVar - accel
+        print(timeVar)
 
         x = x + 1
 
@@ -161,7 +163,7 @@ def rampDown(duration):
     duration = 10
     t0 = time.time()
 
-    while(!GPIO.input(openSwtch)):
+    while(not(GPIO.input(openSwtch))):
 
         timer = time.time()
 
