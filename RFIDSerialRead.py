@@ -94,8 +94,6 @@ def paymentFunc():
 
 def operate(doorState):
 
-    timer = time.time()
-
     speedHi = 300 #mm/s
     speedLo = 10 #mm/s
 
@@ -138,10 +136,9 @@ def operate(doorState):
             time.sleep(highPulse)
             GPIO.output(step,0)
             time.sleep(abs(timeVar))
-
             timeVar = timeVar - accelStep   #Decreasing gap between pulses
 
-        elif ():
+        elif ((timer-t0) >= rampUpTime):
             GPIO.output(step,1)
             time.sleep(highPulse)
             GPIO.output(step,0)
