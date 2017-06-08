@@ -168,9 +168,7 @@ def rampDown(duration):
 
         timeVar = timeVar + deccel
 
-    limit()
-
-def limit():
+	return
 
 
 def RFIDAuthenticate():
