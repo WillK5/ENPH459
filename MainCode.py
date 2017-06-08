@@ -58,17 +58,10 @@ def main():
     # Used to check the initial state of the door, checks limit switches first, moves door to bump into closed
     # switch to ensure closed, when done it exits.  Sets initial TK scene.  
 
-#    myFont = "something"
-#    win = tk.Tk()
-#    win.title("User Interface")
-
-#    while(1):
-#        input_state = GPIO.input(openSwtch)
-#
-#        if input_state == True:
-#            linMov(distance, linRate)
+    authent = RFIDAuthenticate()
+    print(authent)
         
-    rampUpDist(100)
+    # rampUpDist(100)
 
             
 def linMov(distance, linRate):
@@ -182,12 +175,24 @@ def limit():
 
 def RFIDAuthenticate():
 
-    serial = serial.Serial("/dev/ttyUSB0", baudrate=9600)
-
+	serial = serial.Serial("/dev/ttyUSB0", baudrate=9600)
 
     code = ''
     timeout = 10000 #Time it takes for RFID read to timeout
     t0 = time.time()
+
+    # Initialization of scene
+    myFont = "Times"
+    win = tk.Tk()
+    win.title("User Interface")
+
+    var = StringVar()
+    label = Message( win, textvariable=var, font=myFont)
+    var.set("Please tap your card to authenticate")
+
+    label.pack()
+    win.mainloop()
+
 
     while True:
 
