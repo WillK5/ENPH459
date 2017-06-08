@@ -126,7 +126,7 @@ def rampUpTime(duration):
 
 def rampUpDist(distance):
 
-    accel = 1.01
+    accel = 0.00001
     timeVar = speedLo
 
     GPIO.output(enable, GPIO.HIGH) #Enable the motor controller
@@ -137,7 +137,7 @@ def rampUpDist(distance):
     pulses = int(distance * (360/105) * (1/1.8))
     print(pulses)
 
-    while(not(GPIO.input(openSwtch))):
+    while(not(GPIO.input(openSwtch)) and not(GPIO.input(closeSwtch)) ):
 
         if(pulses < x):
             return
@@ -147,12 +147,11 @@ def rampUpDist(distance):
         GPIO.output(step,0)
         time.sleep(abs(timeVar))
 
-        timeVar = timeVar/accel
+        timeVar = timeVar - accel
 
         x = x + 1
 
-    print("limir switch hit")
-    return
+    limit()
 
 def rampDown(duration):
 
@@ -176,8 +175,10 @@ def rampDown(duration):
 
         timeVar = timeVar + deccel
 
-    print("limit switch hit")
-    return
+    limit()
+
+def limit():
+
 
 def RFIDAuthenticate():
 
