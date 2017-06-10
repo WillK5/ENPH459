@@ -48,8 +48,8 @@ global pulseLength, speedHi, speedLo
 
 # Motor Characteristics
 pulseLength = 0.0000001
-speedLo = 0.01   #Low speed limit
-speedHi = 0.001  #High speed limit
+speedLo = 0.3   #Low speed limit
+speedHi = 0.01  #High speed limit
 
 
 def main():
@@ -58,10 +58,17 @@ def main():
     # Used to check the initial state of the door, checks limit switches first, moves door to bump into closed
     # switch to ensure closed, when done it exits.  Sets initial TK scene.  
 
-    authent = RFIDAuthenticate()
-    print(authent)
+#    myFont = "something"
+#    win = tk.Tk()
+#    win.title("User Interface")
+
+#    while(1):
+#        input_state = GPIO.input(openSwtch)
+#
+#        if input_state == True:
+#            linMov(distance, linRate)
         
-    # rampUpDist(100)
+    rampUpDist(100)
 
             
 def linMov(distance, linRate):
@@ -93,7 +100,7 @@ def linMov(distance, linRate):
 
 def rampUpTime(duration):
     
-    accel = 3
+    accel = 0.001
     timeVar = speedLo
 
     t0 = time.time()
@@ -112,7 +119,7 @@ def rampUpTime(duration):
         GPIO.output(step,0)
         time.sleep(abs(timeVar))
 
-        timeVar = timeVar/accel
+        timeVar = timeVar - accel
 
     print("limit switch hit")
     return
@@ -130,7 +137,7 @@ def rampUpDist(distance):
     pulses = int(distance * (360/105) * (1/1.8))
     print(pulses)
 
-    while(not(GPIO.input(openSwtch)) and not(GPIO.input(closeSwtch)) ):
+    while(not(GPIO.input(openSwtch)) and not(GPIO.input(closeSwtch))):
 
         if(pulses < x):
             return
@@ -141,12 +148,58 @@ def rampUpDist(distance):
         time.sleep(abs(timeVar))
 
         timeVar = timeVar - accel
+        print(timeVar)
 
         x = x + 1
 
     limit()
 
-def rampDown(duration):
+def rampDownDist(distance, timeVar):
+
+    deccel = 0.00001
+
+    x = 0
+    pulses = int(distance * (360/105) * (1/1.8))
+    print(pulses)
+
+    while(not(GPIO.input(openSwtch)) and not(GPIO.input(closeSwtch))):
+
+        if(pulses < x):
+            return
+
+        GPIO.output(step,1)
+        time.sleep(pulseLength)
+        GPIO.output(step,0)
+        time.sleep(abs(timeVar))
+
+        timeVar = timeVar + deccel
+
+        x = x + 1
+
+    limit()
+
+# Purpose:  Drives the stepper motor at some existing rate defined by timeVar, for a specific distance
+#			Looks for limit switches during actuation, calling limit function when hit
+def plateau(distance, timeVar):
+
+	x = 0
+	pulses = int(distance * (360/105) * (1/1.8))
+
+	while(not(GPIO.input(openSwtch)) and not(GPIO.input(closeSwtch))):
+
+		if(pulses < x):
+			return
+
+		GPIO.output(step,1)
+		time.sleep(pulseLength)
+		GPIO.output(step,0)
+		time.sleep(abs(timeVar))
+
+		x = x + 1
+
+	limit()
+
+def rampDownTime(duration):
 
     deccel = 0.00001
     timeVar = speedLo
@@ -168,7 +221,7 @@ def rampDown(duration):
 
         timeVar = timeVar + deccel
 
-	return
+    limit()
 
 
 def RFIDAuthenticate():
